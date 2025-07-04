@@ -1,37 +1,35 @@
 library(shiny)
 
-simulate_row <- fluidRow(
+simulateRow <- fluidRow(
   column(2),
   column(8),
   column(2)
 )
 
-bigbox_row <- fluidRow(
+bigboxRow <- fluidRow(
   column(2),
   column(8),
   column(2)
 )
 
-input_row <- fluidRow(
+inputRow <- fluidRow(
   column(2),
   column(8),
   column(2)
 )
 
-download_row <- fluidRow(
+downloadRow <- fluidRow(
   column(2),
   column(8),
   column(2)
 )
-
-
 
 ui <- fluidPage(
   titlePanel("Simulator"),
-  simulate_row,
-  bigbox_row,
-  input_row,
-  download_row
+  simulateRow,
+  bigboxRow,
+  inputRow,
+  downloadRow
 )
 
 
