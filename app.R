@@ -2,7 +2,7 @@ library(shiny)
 source("ui_helper.R")
 
 ui <- fluidPage(
-  titlePanel("Simulator"),
+  titlePanel("Leontief Input Output Modeling of the Mexico States"),
   simulateRow,
   bigboxRow,
   inputRow,

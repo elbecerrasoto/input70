@@ -2,9 +2,9 @@ library(purrr)
 library(stringr)
 
 simulateRow <- fluidRow(
-  column(2),
-  column(8),
-  column(2), radioButtons("shock_type", "Choose the type of Demand Shock to inject:",
+  column(4, textOutput("welcome")),
+  column(4, actionButton("simulate", "Start Simulation", class = "btn-lg bnt-danger")),
+  column(4), radioButtons("shock_type", "Choose the type of Demand Shock to inject:",
     choiceNames = list(
       "Add (millions of pesos)",
       "Multiply by previous demand",
