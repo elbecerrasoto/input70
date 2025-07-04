@@ -1,3 +1,6 @@
+library(purrr)
+library(stringr)
+
 simulateRow <- fluidRow(
   column(2),
   column(8),
@@ -18,8 +21,16 @@ bigboxRow <- fluidRow(
   column(3, textOutput("employment_rest_box")),
 )
 
-inputThirtyFiveState <- numericInput("s1", "State 1", value = 0.0)
-inputThirtyFiveRest <- numericInput("r1", "Rest 1", value = 0.0)
+custom_numeric_input <- function(id, label, value = 0) {
+  numericInput(id, label, value)
+}
+
+inputThirtyFiveState <- map2(
+  str_c("s", 1:32),
+  str_c("State S ", 1:32),
+  custom_numeric_input
+)
+inputThirtyFiveRest <- custom_numeric_input("r1", "Rest pais apaiaitaiets aestes 1")
 
 inputRow <- fluidRow(
   column(2, inputThirtyFiveState),
@@ -32,6 +43,3 @@ downloadRow <- fluidRow(
   column(8),
   column(2)
 )
-
-x <- expression(summary(iris))
-eval(x)
