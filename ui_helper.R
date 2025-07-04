@@ -26,11 +26,16 @@ custom_numeric_input <- function(id, label, value = 0) {
 }
 
 inputThirtyFiveState <- map2(
-  str_c("s", 1:32),
-  str_c("State S ", 1:32),
+  str_c("s", 1:35),
+  str_c("State: ", 1:35),
   custom_numeric_input
 )
-inputThirtyFiveRest <- custom_numeric_input("r1", "Rest pais apaiaitaiets aestes 1")
+
+inputThirtyFiveRest <- map2(
+  str_c("r", 1:35),
+  str_c("Outer: ", 1:35),
+  custom_numeric_input
+)
 
 inputRow <- fluidRow(
   column(2, inputThirtyFiveState),
