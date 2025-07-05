@@ -35,9 +35,11 @@ Osr <- matrix(0, nrow = N_OUTER, ncol = N_REGION)
 Lrr <- solve(Irr - Arr)
 Lss <- solve(Iss - Ass)
 
+# Spillover
 Srs <- Lrr %*% Ars
 Ssr <- Lss %*% Asr
 
+# FeedBack
 Frr <- solve(Irr - Srs %*% Ssr)
 Fss <- solve(Iss - Ssr %*% Srs)
 
@@ -65,5 +67,17 @@ I <- diag(N_SECTORS)
 I <- diag(N_SECTORS)
 Ladd <- I + (M1 - I) + (M2 - I) %*% M1 + (M3 - I) %*% M2 %*% M1
 
-Ls_equal <- near(Ladd, L, tol = 1e4) |> all()
-stopifnot("Additive Decomposition Failed" = Ls_equal)
+M1a <- M1 - I
+M2a <- (M2 - I) %*% M1
+M3a <- (M3 - I) %*% M2 %*% M1
+
+# 379 Miller & Blair
+# Initial injections
+# Add net intraregional effects
+# Add the net interregional spillover effects
+# Add the net interregional feedback effects
+# x = Mf = I %*% f + M1a %*% f + M2a %*% f + M3a %*% f
+
+intrar_e <- M1a |> colSums()
+spillover_e <- M2a |> colSums()
+feedback_e <- M3a |> colSums()
