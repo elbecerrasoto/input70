@@ -61,3 +61,9 @@ stopifnot("Mutiplicative Decomposition Failed" = Ls_equal)
 # ------ Additive descomposition
 
 I <- diag(N_SECTORS)
+
+I <- diag(N_SECTORS)
+Ladd <- I + (M1 - I) + (M2 - I) %*% M1 + (M3 - I) %*% M2 %*% M1
+
+Ls_equal <- near(Ladd, L, tol = 1e4) |> all()
+stopifnot("Additive Decomposition Failed" = Ls_equal)
