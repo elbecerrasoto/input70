@@ -57,3 +57,7 @@ L321 <- M3 %*% M2 %*% M1
 
 Ls_equal <- near(L321, L, tol = 1e4) |> all()
 stopifnot("Mutiplicative Decomposition Failed" = Ls_equal)
+
+# ------ Additive descomposition
+
+I <- diag(N_SECTORS)
