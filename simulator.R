@@ -44,8 +44,16 @@ get_L <- function(A) {
 }
 
 get_B <- function(Z, x) {
-  Zt <- Z |> tib2mat() |> t() |> as_tibble() |> set_names(names(Z))
-  get_A(Zt, x) |> tib2mat() |> t() |> as_tibble() |> set_names(names(Z))
+  Zt <- Z |>
+    tib2mat() |>
+    t() |>
+    as_tibble() |>
+    set_names(names(Z))
+  get_A(Zt, x) |>
+    tib2mat() |>
+    t() |>
+    as_tibble() |>
+    set_names(names(Z))
 }
 
 get_G <- function(B) {
@@ -91,24 +99,24 @@ get_ZABLGfx_multipliers <- function(Z_aug, n_sectors) {
 
   A <- get_A(Z, x)
   Am <- tib2mat(A, drop_names = TRUE)
-  
+
   B <- get_B(Z, x)
   Bm <- tib2mat(B, drop_names = TRUE)
 
   L <- get_L(A)
   Lm <- tib2mat(L, drop_names = TRUE)
-  
+
   G <- get_G(B)
   Gm <- tib2mat(G, drop_names = TRUE)
-  
+
   # ---- get multipliers
-  
+
   output_multipliers <- colSums(L)
   input_multipliers <- colSums(G)
-  
+
   BL <- get_linkage(L) |> set_names(names(Z))
   FL <- get_linkage(G) |> set_names(names(Z))
-  
+
   are_not_less_than_1 <- all(output_multipliers >= 1)
   stopifnot("Multipliers are less than 1." = are_not_less_than_1)
 
