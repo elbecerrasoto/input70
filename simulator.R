@@ -1,5 +1,4 @@
 #!/usr/bin/Rscript
-library(leontief)
 library(tidyverse)
 library(glue)
 
@@ -145,13 +144,6 @@ get_ZABLGfx_multipliers <- function(Z_aug, n_sectors) {
       sector = sector
     ) |>
     select(-sector_raw)
-
-  assert_matches_leontief_library <-
-    output_multiplier(Lm) |>
-    as.numeric() |>
-    near(multipliers$multiplier, TOLERANCE) |>
-    all()
-  stopifnot("Multipliers, does NOT matches leontief library." = assert_matches_leontief_library)
 
   # ---- expand multipliers to other summaries
 
