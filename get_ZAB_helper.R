@@ -1,15 +1,3 @@
-library(tidyverse)
-library(glue)
-
-TOLERANCE <- 1e-2
-
-N_REGION <- 35
-N_OUTER <- 35
-N_SECTORS <- N_REGION + N_OUTER
-
-STATES <- read_rds("data/mips_br.Rds")
-Z_aug <- STATES[["sinaloa"]]
-
 tib2mat <- function(tib, drop_names = FALSE) {
   mat <- tib |>
     select(where(is.numeric)) |>
@@ -86,6 +74,7 @@ get_A <- function(Z, x) {
 }
 
 get_L <- function(A) {
+  check_square(A)
   I <- diag(ncol(A))
   solve(I - A)
 }
