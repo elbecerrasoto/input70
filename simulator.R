@@ -1,6 +1,11 @@
-#!/usr/bin/Rscript
 library(tidyverse)
 library(glue)
+
+TOLERANCE <- 1e-2
+
+N_REGION <- 35
+N_OUTER <- 35
+N_SECTORS <- N_REGION + N_OUTER
 
 tib2mat <- function(tib, drop_names = FALSE) {
   mat <- tib |>
@@ -59,13 +64,68 @@ get_G <- function(B) {
   get_L(B)
 }
 
-
 get_linkage <- function(L) {
   n_sectors <- ncol(L)
   multipliers <- L |> colSums()
   multipliers_mean <- multipliers |> sum() / n_sectors
   multipliers / multipliers_mean
 }
+
+library(tidyverse)
+if (FALSE) {
+  astr
+} else if (TRUE) {
+  print("hi")
+} else {
+  at
+}
+
+check_input <- function(x) {
+  if (is_tibble(x)) {
+    return(tib2mat(x))
+  } else if (is.matrix(x)) {
+    return(x)
+  } else {
+    stop("Input must be a tibble or a matrix")
+  }
+}
+
+get_Z <- function(Z_aug) {
+  # tib -> mat
+  Z_aug <- Z_aug |> select(where(is.numeric))
+  Z <- Z_aug[1:N_SECTORS, 1:N_SECTORS]
+  tib2mat(Z)
+}
+
+get_x <- function(Z_aug) {
+  # tib -> double
+  x_row <- rowSums(Z_aug[1:N_SECTORS, ])
+  x_col <- colSums(Z_aug[, 1:N_SECTORS])
+
+  are_xs_equal <- all(near(x_row, x_col, TOLERANCE))
+  stopifnot("Row and Col totals do NOT match." = are_xs_equal)
+
+  return(x_row)
+}
+
+get_f <- function() {
+  # tib -> double
+  f <- Z_aug[1:N_SECTORS, -1:-N_SECTORS] |>
+    rowSums()
+}
+
+STATES <- read_rds("data/mips_br.Rds")
+results <- STATES[["sinaloa"]]
+normalize_sector()
+
+
+get_A <- function(Z, x) {
+  # fails if Z and x names are not equal
+  Z |>
+    imap(normalize_sector, x = x) |>
+    as_tibble()
+}
+
 
 
 get_ZABLGfx_multipliers <- function(Z_aug, n_sectors) {
@@ -78,23 +138,7 @@ get_ZABLGfx_multipliers <- function(Z_aug, n_sectors) {
 
   # ---- get Z, A, B, L, G, f, x
 
-  Z_aug <- Z_aug |> select(where(is.numeric))
-  Z <- Z_aug[1:N_SECTORS, 1:N_SECTORS]
-  sector_names <- names(Z)
-  Zm <- tib2mat(Z, drop_names = TRUE)
 
-  x_row <- rowSums(Z_aug[1:N_SECTORS, ])
-  x_col <- colSums(Z_aug[, 1:N_SECTORS])
-
-  are_xs_equal <- all(near(x_row, x_col, TOLERANCE))
-  stopifnot("Row and Col totals do NOT match." = are_xs_equal)
-
-  x <- x_row |> set_names(names(Z))
-
-  # final demand
-  f <- Z_aug[1:N_SECTORS, -1:-N_SECTORS] |>
-    rowSums() |>
-    set_names(names(Z))
 
   A <- get_A(Z, x)
   Am <- tib2mat(A, drop_names = TRUE)
