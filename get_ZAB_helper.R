@@ -83,11 +83,11 @@ get_B <- function(Z, x) normalize(Z, x, byrow = TRUE)
 
 get_G <- function(B) get_L(B)
 
-get_linkage <- function(M) {
+get_linkage <- function(M, backward = TRUE) {
   n_sectors <- ncol(M)
-  multipliers <- M |> colSums()
+  multipliers <- ifelse(backward, colSums(M), rowSums(M))
 
-  are_not_less_than_1 <- all(output_multipliers >= 1)
+  are_not_less_than_1 <- all(multipliers >= 1)
   stopifnot("Multipliers are less than 1." = are_not_less_than_1)
 
   multipliers_mean <- multipliers |> sum() / n_sectors
