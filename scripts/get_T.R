@@ -1,6 +1,6 @@
 library(tidyverse)
 
-# ---- GLOBALS
+# ---- globals
 
 population <- read_tsv("data/mexico_population.tsv")
 employment <- read_tsv("data/mexico_employment_by_sector.tsv")
@@ -34,11 +34,33 @@ get_E <- function(state) {
   c(E_state, E_rest)
 }
 
+get_e <- function(state) {
+  x <- ALL[[state]]$x
+  E <- get_E(state)
+
+  E / x
+}
+
+get_T <- function(state) {
+  e <- get_e(state)
+  L <- ALL[[state]]$L
+  Tm <- diag(e) %*% L
+  mask <- is.nan(Tm) | is.infinite(Tm) | is.na(Tm)
+  Tm[mask] <- 0
+  Tm
+}
+
+get_Tmultipliers <- function(state) {
+  colSums(get_T(state))
+}
+
 # ---- Es and Ts for all
 
-# ---- Sinaloa
-state <- "sinaloa"
-ALL[[state]]
+all_Ts <- map(names(ALL), get_T)
+all_Ts <- all_Ts |> set_names(names(ALL))
 
-E_sinaloa <- get_E(state)
-E_sinaloa
+for (state in names(ALL)) {
+  ALL[[state]]$Tm <- all_Ts[[state]]
+}
+
+write_rds(ALL, "data/all2.Rds")
