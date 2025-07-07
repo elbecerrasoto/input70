@@ -4,9 +4,7 @@ library(janitor)
 
 x <- read_xlsx("PT_MIP_Nacional_Homologada.xlsx")
 population <- read_xlsx("data/Poblacion_Edited.xlsx")
-states_keys <- read_csv("data/states.csv")
 ALL <- read_rds("data/all.Rds")
-
 
 population <- population |>
   mutate(
@@ -14,6 +12,12 @@ population <- population |>
   ) |>
   relocate(state_key)
 
-population |> view()
+E_national <- x[1, 4:38] |> as.numeric()
 
-names(x) |> make_clean_names()
+sectors <- names(x) |> make_clean_names()
+sectors <- sectors[4:38]
+
+E_national <- x[1, 4:38] |> as.numeric()
+
+mexico_pop <- sum(population$total)
+working_pop <- sum(E_national) / mexico_pop
