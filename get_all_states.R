@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 library(tidyverse)
 library(glue)
 source("get_ZAB.R")
@@ -113,10 +114,6 @@ get_multipliers <- function(state) {
 all_states_multipliers <- imap(all_ZABs_Ms, \(data, state) get_multipliers(state))
 
 multiplers <- bind_rows(all_states_multipliers)
-
-all_states_multipliers
-all_ZABs_Ms
-
 all_ZAB_multipliers <- map2(all_states_multipliers, all_ZABs_Ms, c)
 
 multiplers |>

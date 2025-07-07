@@ -69,9 +69,7 @@ normalize <- function(M, x, byrow = TRUE) {
     )
 }
 
-get_A <- function(Z, x) {
-  normalize(Z, x, byrow = FALSE)
-}
+get_A <- function(Z, x) normalize(Z, x, byrow = FALSE)
 
 get_L <- function(A) {
   check_square(A)
@@ -85,7 +83,12 @@ get_G <- function(B) get_L(B)
 
 get_linkage <- function(M, backward = TRUE) {
   n_sectors <- ncol(M)
-  multipliers <- ifelse(backward, colSums(M), rowSums(M))
+
+  if (backward) {
+    multipliers <- colSums(M)
+  } else {
+    multipliers <- rowSums(M)
+  }
 
   are_not_less_than_1 <- all(multipliers >= 1)
   stopifnot("Multipliers are less than 1." = are_not_less_than_1)

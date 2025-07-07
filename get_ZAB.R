@@ -16,7 +16,7 @@ get_ZAB_LG_fx <- function(Z_aug) {
   B <- get_B(Z, x)
 
   L <- get_L(A)
-  G <- get_G(A)
+  G <- get_G(B)
 
   list(Z = Z, A = A, B = B, L = L, G = G, f = f, x = x)
 }
