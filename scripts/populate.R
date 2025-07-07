@@ -26,7 +26,7 @@ if (.Platform$OS.type == "windows") {
 
 URLs <- str_c(STEM, "/mip_ixi_br_", STATE_CODES, "_d_2018.xlsx") |>
   set_names(STATE_CODES)
-TSVs <- str_c(STEM, "/mip_ixi_br_", STATE_CODES, "_d_2018.tsv") |>
+TSVs <- str_c(DATA_DIR, "/mip_ixi_br_", STATE_CODES, "_d_2018.tsv") |>
   set_names(STATE_CODES)
 # ---- code
 
