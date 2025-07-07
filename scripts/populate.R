@@ -7,7 +7,7 @@ source("scripts/clean.R")
 # ---- globals
 
 DOWNLOAD <- TRUE
-WRITE_TO_TSV <- TRUE
+WRITE_TO_TSV <- FALSE
 STEM <- "https://www.inegi.org.mx/contenidos/investigacion/coumip/tabulados"
 
 DATA_DIR <- "data"
@@ -41,8 +41,9 @@ main <- function(state_code) {
     write_tsv(out_tib, tsv_i)
   }
 
+  file.remove(xlsx_i)
   out_tib
 }
 
 done <- future_map(STATE_CODES, main)
-write_rds(done, glue("{DATA_DIR}/mipsBR.Rds"))
+write_rds(done, glue("{DATA_DIR}/mips_br.Rds"))
