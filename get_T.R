@@ -1,23 +1,20 @@
 library(tidyverse)
-library(readxl)
 
-x <- read_xlsx("PT_MIP_Nacional_Homologada.xlsx")
-population <- read_xlsx("data/Poblacion_Edited.xlsx")
-ALL <- read_rds("data/all.Rds")
+# ---- GLOBALS
 
-population <- population |>
-  mutate(
-    state_key = names(ALL)
-  ) |>
-  relocate(state_key)
+population <- read_tsv("data/mexico_population.tsv")
+employment <- read_tsv("data/mexico_employment_by_sector.tsv")
 
-E_national <- x[1, 4:38] |> as.numeric()
+E_national <- employment$employees
 total_working <- sum(E_national)
 
-mexico_pop <- sum(population$total)
-working_coef <- total_working / mexico_pop
+ALL <- read_rds("data/all.Rds")
 
-elasticities <- E_national / total_working
+ELASTICITIES <- E_national / total_working
+MEXICO_POP <- sum(population$total)
+WORKING_COEF <- total_working / MEXICO_POP
+
+# ---- helpers
 
 get_state_pop <- function(state) {
   population |>
@@ -25,11 +22,23 @@ get_state_pop <- function(state) {
     pull(total)
 }
 
-state_pop <- get_state_pop("sinaloa")
+get_E <- function(state) {
+  state_pop <- get_state_pop(state)
 
-rest_working <- (mexico_pop - state_pop) * working_coef
-state_working <- state_pop * working_coef
+  rest_working <- (MEXICO_POP - state_pop) * WORKING_COEF
+  state_working <- state_pop * WORKING_COEF
 
+  E_state <- state_working * ELASTICITIES
+  E_rest <- rest_working * ELASTICITIES
 
-E_rest <- rest_working * elasticities
-E_state <- state_working * elasticities
+  c(E_state, E_rest)
+}
+
+# ---- Es and Ts for all
+
+# ---- Sinaloa
+state <- "sinaloa"
+ALL[[state]]
+
+E_sinaloa <- get_E(state)
+E_sinaloa

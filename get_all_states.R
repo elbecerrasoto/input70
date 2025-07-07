@@ -92,7 +92,7 @@ get_multipliers <- function(state) {
     )
 
   detach(current)
-  multipliers |>
+  multipliers <- multipliers |>
     select(
       output_multiplier,
       sector,
@@ -108,18 +108,25 @@ get_multipliers <- function(state) {
       mip,
       raw_name
     )
+  list(multipliers = multipliers)
 }
 
 
-all_states_multipliers <- imap(all_ZABs_Ms, \(data, state) get_multipliers(state))
+all_states_multipliers <-
+  map(names(all_ZABs_Ms), get_multipliers)
 
-multiplers <- bind_rows(all_states_multipliers)
+all_states_multipliers <-
+  all_states_multipliers |>
+  set_names(names(all_ZABs_Ms))
+
+unested <- map(all_states_multipliers, \(x) x[[1]])
+multiplers <- bind_rows(unested)
+
+multiplers |>
+  writexl::write_xlsx("data/multipliers.xlsx")
+multiplers |>
+  write_tsv("data/multipliers.tsv")
+
 all_ZAB_multipliers <- map2(all_states_multipliers, all_ZABs_Ms, c)
-
-multiplers |>
-  writexl::write_xlsx("multipliers.xlsx")
-
-multiplers |>
-  write_tsv("multipliers.tsv")
 
 write_rds(all_ZAB_multipliers, "data/all.Rds")
